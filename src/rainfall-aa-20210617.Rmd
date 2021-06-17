@@ -222,7 +222,8 @@ wili_rain_daily <- wili_rain_tidy %>%
 wili_plot_pcp <- ggplot(wili_rain_daily, aes(date, daily_pcp)) +
   geom_line(color = "blue") +
   labs(x= "Year", y="Precipitation (in)", title = "Wiliwilinui Ridge Rainfall") + 
-  theme_minimal() 
+  theme_minimal()
+
 
 wili_plot_pcp
 ```
