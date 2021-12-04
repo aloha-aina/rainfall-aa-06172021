@@ -286,3 +286,73 @@ ggplot(data = kuli_wili_comp, aes(x = rain_in.x,
   
 ```
 
+```{r}
+# compare Hawaii Loa Ridge to Kuliouou Ridge
+# compare hourly
+
+hawaiiloa_rain_hourly <- hawaiiloa_rain_tidy %>% 
+  mutate(rain_in = rain/25.4) %>% 
+  filter(year == 2021) %>% 
+  filter(month == 1) %>% 
+  group_by(year, month, day) %>% 
+  filter(day %in% c(16,17,18,19,20))
+
+kuli_rain_hourly <- kuli_rain_tidy %>% 
+  mutate(rain_in = rain/25.4) %>% 
+  filter(year == 2021) %>% 
+  filter(month == 1) %>% 
+  group_by(year, month, day) %>% 
+  filter(day %in% c(16,17,18,19,20))
+
+# compare the 18th
+kuli_rain_18 <- kuli_rain_hourly %>% 
+  filter(day == 18)
+
+hawaiiloa_rain_18 <- hawaiiloa_rain_hourly %>% 
+  filter(day == 18)
+
+ggplot() +
+  geom_line(data = kuli_rain_18, aes(x = hour,
+                                     y = rain_in,
+                                     color = "blue")) +
+  geom_line(data = hawaiiloa_rain_18, aes(x = hour,
+                                     y = rain_in,
+                                     color = "red")) +
+  theme_minimal() +
+  scale_color_manual(values = c("blue", "red"), labels = c("Kuliouou", "Hawaii Loa")) +
+  theme(legend.title = element_blank())
+
+# correlation plot
+kuli_hawaiiloa_comp <- merge(kuli_rain_18, hawaiiloa_rain_18, by = "hour")
+
+ggplot(data = kuli_hawaiiloa_comp, aes(x = rain_in.x,
+                                  y = rain_in.y)) +
+  geom_point() +
+  geom_smooth(method='lm', formula = y~x) +
+  stat_regline_equation(label.x = 0.25,
+                        label.y = 0.75) +
+  stat_cor(label.x = 0.25,
+           label.y = 0.8) +
+  theme_minimal() +
+  labs(x = "Kuliouou Ridge",
+       y = "Hawaii Loa Ridge")
+```
+
+```{r}
+# all three plotted together
+
+ggplot() +
+  geom_line(data = kuli_rain_18, aes(x = hour,
+                                     y = rain_in,
+                                     color = "blue")) +
+  geom_line(data = hawaiiloa_rain_18, aes(x = hour,
+                                     y = rain_in,
+                                     color = "red")) +
+  geom_line(data = wili_rain_18, aes(x = hour,
+                                     y = rain_in,
+                                     color = "orange")) +
+  theme_minimal() +
+  scale_color_manual(values = c("blue", "red", "orange"), labels = c("Kuliouou", "Wiliwilinui", "Hawaii Loa")) +
+  theme(legend.title = element_blank())
+```
+
