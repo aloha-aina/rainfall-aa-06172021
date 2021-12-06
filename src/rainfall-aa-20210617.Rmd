@@ -139,7 +139,7 @@ kuli350_rain_tidy <- kuli350_rain %>%
 kuli350_rain_daily <- kuli350_rain_tidy %>% 
   group_by(year, month,day) %>% 
   summarise(daily_pcp = sum(rain)) %>% 
-    mutate(date = make_date(year, month, day)) %>% 
+  mutate(date = make_date(year, month, day)) %>% 
   mutate(daily_pcp = daily_pcp/25.4)
 
 kuli350_plot_pcp <- ggplot(kuli350_rain_daily, aes(date, daily_pcp)) +
@@ -254,6 +254,38 @@ kuli_rain_hourly <- kuli_rain_tidy %>%
  # filter(month == 1) %>% 
   group_by(year, month, day) #%>% 
   #filter(day %in% c(16,17,18,19,20))
+
+# daily time series 2021
+wili_rain_daily_2021 <- wili_rain_daily %>% 
+  filter(year == 2021)
+
+kuli_rain_daily_2021 <- kuli_rain_daily_in %>% 
+  filter(year == 2021)
+
+ggplot() +
+  geom_line(data = wili_rain_daily_2021, aes(x = date,
+                                             y = daily_pcp,
+                                             color = "blue")) +
+  geom_line(data = kuli_rain_daily_2021, aes(x = date,
+                                             y = daily_pcp,
+                                             color = "pink")) +
+  theme_minimal() +
+  scale_color_manual(values = c("blue", "darkgreen"), labels = c("Wiliwilinui Ridge", "Kuliouou Ridge")) +
+  theme(legend.title = element_blank()) 
+
+kuli_wili_daily_2021 <- merge(kuli_rain_daily_2021, wili_rain_daily_2021, by = "date")
+
+ggplot(data = kuli_wili_daily_2021, aes(x = daily_pcp.x,
+                                  y = daily_pcp.y)) +
+  geom_point() +
+  geom_smooth(method='lm', formula = y~x) +
+  stat_regline_equation(label.x = 0.25,
+                        label.y = 3) +
+  stat_cor(label.x = 0.25,
+           label.y = 3.3) +
+  theme_minimal() +
+  labs(x = "Kuliouou Ridge",
+       y = "Wiliwilinui Ridge")
 
 ## entire time series 
 ggplot() +
