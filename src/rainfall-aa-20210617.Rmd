@@ -243,17 +243,30 @@ ggsave("all_pcp_plots.pdf", width = 12, height = 8)
 
 wili_rain_hourly <- wili_rain_tidy %>% 
   mutate(rain_in = rain/25.4) %>% 
-  filter(year == 2021) %>% 
-  filter(month == 1) %>% 
-  group_by(year, month, day) %>% 
-  filter(day %in% c(16,17,18,19,20))
+  #filter(year == 2021) %>% 
+  #filter(month == 1) %>% 
+  group_by(year, month, day) #%>% 
+  #filter(day %in% c(16,17,18,19,20))
 
 kuli_rain_hourly <- kuli_rain_tidy %>% 
   mutate(rain_in = rain/25.4) %>% 
-  filter(year == 2021) %>% 
-  filter(month == 1) %>% 
-  group_by(year, month, day) %>% 
-  filter(day %in% c(16,17,18,19,20))
+  #filter(year == 2021) %>% 
+ # filter(month == 1) %>% 
+  group_by(year, month, day) #%>% 
+  #filter(day %in% c(16,17,18,19,20))
+
+## entire time series 
+ggplot() +
+  geom_line(data = wili_rain_hourly, aes(x = date,
+                                     y = rain_in,
+                                     color = "blue")) +
+  geom_line(data = kuli_rain_hourly, aes(x = date,
+                                     y = rain_in,
+                                     color = "red")) +
+  theme_minimal() +
+  scale_color_manual(values = c("blue", "red"), labels = c("Wiliwilinui Ridge", "Kuliouou Ridge")) +
+  theme(legend.title = element_blank()) 
+
 
 # compare the 18th
 wili_rain_18 <- wili_rain_hourly %>% 
